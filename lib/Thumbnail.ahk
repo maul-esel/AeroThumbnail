@@ -17,7 +17,7 @@ To add a thumbnail to a gui, you must know the following:
 	- the coordinates of the area to be shown
 1. Create a thumbnail with Thumbnail_Create()
 2. Set its regions with Thumbnail_SetRegion()
-	a. optionally query for the source windows width and heigth before with <Thumbnail_GetSourceSize()>
+	a. optionally query for the source windows width and height before with <Thumbnail_GetSourceSize()>
 3. optionally set the opacity with <Thumbnail_SetOpacity()>
 4. show the thumbnail with <Thumbnail_Show()>
 ***************************************************************************************************************	
@@ -57,11 +57,11 @@ params:
 	int xDest - the x-coordinate of the rendered thumbnail inside the destination window
 	int yDest - the y-coordinate of the rendered thumbnail inside the destination window
 	int wDest - the width of the rendered thumbnail inside the destination window
-	int hDest - the heigth of the rendered thumbnail inside the destination window
+	int hDest - the height of the rendered thumbnail inside the destination window
 	int xSource - the x-coordinate of the area that will be shown inside the thumbnail
 	int ySource - the y-coordinate of the area that will be shown inside the thumbnail
 	int wSource - the width of the area that will be shown inside the thumbnail
-	int hSource - the heigth of the area that will be shown inside the thumbnail
+	int hSource - the height of the area that will be shown inside the thumbnail
 				
 returns:
 	bool success - true on success, false on failure
@@ -148,23 +148,23 @@ return DllCall("dwmapi.dll\DwmUnregisterThumbnail", "UInt", hThumb) ? false : tr
 
 /**************************************************************************************************************
 Function: Thumbnail_GetSourceSize()
-gets the width and heigth of the source window - can be used with <Thumbnail_SetRegion()>
+gets the width and height of the source window - can be used with <Thumbnail_SetRegion()>
 
 params:
 	handle hThumb - the thumbnail id returned by <Thumbnail_Create()>
 	ByRef int width - receives the width of the window
-	ByRef int heigth - receives the heigth of the window
+	ByRef int height - receives the height of the window
 				
 returns:
 	bool success - true on success, false on failure
 ***************************************************************************************************************
 */
-Thumbnail_GetSourceSize(hThumb, ByRef width, ByRef heigth) {
+Thumbnail_GetSourceSize(hThumb, ByRef width, ByRef height) {
 VarSetCapacity(Size, 8, 0)
 if DllCall("dwmapi.dll\DwmQueryThumbnailSourceSize", "Uint", hThumb, "Uint", &Size)
 	return false
 width := NumGet(&Size + 0, 0, "int")
-heigth := NumGet(&Size + 0, 4, "int")
+height := NumGet(&Size + 0, 4, "int")
 return true
 }
 
@@ -210,13 +210,13 @@ hSource := WinExist("ahk_class Progman") ; ... and to the desktop
 hThumb := Thumbnail_Create(hDestination, hSource) ; you must get the return value here!
 
 ; getting the source window dimensions:
-Thumbnail_GetSourceSize(hThumb, width, heigth)
+Thumbnail_GetSourceSize(hThumb, width, height)
 
 ; then setting its region:
 Thumbnail_SetRegion(hThumb, 25, 25 ; x and y in the GUI
 , 400, 350 ; display dimensions
 , 0, 0 ; source area coordinates
-, width, heigth) ; the values from Thumbnail_GetSourceSize()
+, width, height) ; the values from Thumbnail_GetSourceSize()
 
 ; now some GUI stuff:
 Gui +AlwaysOnTop +ToolWindow
