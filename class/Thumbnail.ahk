@@ -9,7 +9,7 @@ Credits:
 
 NOTE:
 *This requires Windows Vista or Windows7 and the latest AutoHotkey build* (tested on Windows 7)
-	
+
 Quick-Tutorial:
 To add a thumbnail to a gui, you must know the following:
 	- the hwnd / id of your gui
@@ -30,7 +30,7 @@ class Thumbnail
 	field: module
 		static field that contains the hModule handle to the loaded dwmapi.dll.
 		This field is for internal use only.
-	
+
 	See also:
 		- <Unload>
 	***********************************************************************************************************
@@ -41,7 +41,7 @@ class Thumbnail
 	field: handle
 		contains the hThumb handle to the thumbnail.
 		This field is for internal use only.
-	
+
 	See also:
 		- <Destroy>
 	***********************************************************************************************************
@@ -51,7 +51,7 @@ class Thumbnail
 	/**********************************************************************************************************
 	method: __New
 		constructor for the class
-	
+
 	Parameters:
 		hWnd hDestination - the handle to the window to display the thumbnail
 		hWnd hSource - 	the handle to the window to be displayed by the thumbnail
@@ -77,11 +77,11 @@ class Thumbnail
 	{
 		this.Destroy()
 	}
-	
+
 	/**********************************************************************************************************
 	method: Destroy
 		destroys a thumbnail relationship and sets the handle to 0
-				
+
 	returns:
 		bool success - true on success, false on failure
 	***********************************************************************************************************
@@ -92,7 +92,7 @@ class Thumbnail
 		this.id := 0
 		return DllCall("dwmapi.dll\DwmUnregisterThumbnail", "UPtr", id) >= 0x00
 	}
-	
+
 	/**********************************************************************************************************
 	method: GetSourceSize
 		gets the width and height of the source window
@@ -100,10 +100,10 @@ class Thumbnail
 	Parameters:
 		ByRef int width - receives the width of the window
 		ByRef int height - receives the height of the window
-				
+
 	returns:
 		bool success - true on success, false on failure
-		
+
 	See also:
 		- <GetSourceWidth>
 		- <GetSourceHeight>
@@ -119,11 +119,11 @@ class Thumbnail
 		height := NumGet(&Size + 0, 4, "int")
 		return true
 	}
-	
+
 	/**********************************************************************************************************
 	method: GetSourceHeight
 		gets the height of the source window
-		
+
 	returns:
 		int height - the source window's height
 
@@ -138,14 +138,14 @@ class Thumbnail
 		this.GetSourceSize(width, height)
 		return height
 	}
-	
+
 	/**********************************************************************************************************
 	method: GetSourceWidth
 		gets the width of the source window
-		
+
 	returns:
 		int width - the source window's width
-		
+
 	See also:
 		- <GetSourceSize>
 		- <GetSourceHeight>
@@ -157,14 +157,14 @@ class Thumbnail
 		this.GetSourceSize(width, height)
 		return width
 	}
-	
+
 	/**********************************************************************************************************
 	method: Hide
 		hides a thumbnail. It can be shown again without recreating
-				
+
 	returns:
 		bool success - true on success, false on failure
-		
+
 	See also:
 		- <Show>
 	***********************************************************************************************************
@@ -174,7 +174,7 @@ class Thumbnail
 		static dwFlags := 0x00000008, fVisible := false
 
 		VarSetCapacity(dskThumbProps, 45, 0)
-		
+
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(fVisible,	dskThumbProps,	37,	"UInt")
 
@@ -184,7 +184,7 @@ class Thumbnail
 	/**********************************************************************************************************
 	method: SetDestinationRegion
 		sets the region to be used for displaying
-		
+
 	Parameters:
 		int xDest - the x-coordinate of the rendered thumbnail inside the destination window
 		int yDest - the y-coordinate of the rendered thumbnail inside the destination window
@@ -193,7 +193,7 @@ class Thumbnail
 
 	returns:
 		bool success - true on success, false on failure
-		
+
 	See also:
 		- <SetRegion>
 		- <SetSourceRegion>
@@ -202,22 +202,22 @@ class Thumbnail
 	SetDestinationRegion(xDest, yDest, wDest, hDest)
 	{
 		static dwFlags := 0x00000001
-		
+
 		VarSetCapacity(dskThumbProps, 45, 0)
-		
+
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(xDest,		dskThumbProps,	4,	"Int")
 		NumPut(yDest,		dskThumbProps,	8,	"Int")
 		NumPut(wDest+xDest,		dskThumbProps,	12,	"Int")
 		NumPut(hDest+yDest,		dskThumbProps,	16,	"Int")
-		
+
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
-	
+
 	/**********************************************************************************************************
 	method: SetIncludeSourceNC
 		sets whether the source's non-client area should be included. The default value is true.
-		
+
 	Parameters:
 		bool include - true to include the non-client area, false to exclude it
 
@@ -228,19 +228,19 @@ class Thumbnail
 	SetIncludeSourceNC(include)
 	{
 		static dwFlags := 0x00000010
-		
+
 		VarSetCapacity(dskThumbProps, 45, 0)
-		
+
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(!include,		dskThumbProps,	42, "UInt")
-		
+
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
-	
+
 	/**********************************************************************************************************
 	method: SetOpacity
 		sets the opacity level of the thumbnail
-		
+
 	returns:
 		bool success - true on success, false on failure
 	***********************************************************************************************************
@@ -250,17 +250,17 @@ class Thumbnail
 		static dwFlags := 0x00000004
 
 		VarSetCapacity(dskThumbProps, 45, 0)
-		
+
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(opacity,		dskThumbProps,	36,	"UChar")
-		
+
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", "UPtr", this.id, "Ptr", &dskThumbProps) >= 0x00
 	}
-	
+
 	/**********************************************************************************************************
 	method: SetRegion
 		sets the regions for both the area to be displayed and the area to be used for displaying
-	
+
 	Parameters:
 		int xDest - the x-coordinate of the rendered thumbnail inside the destination window
 		int yDest - the y-coordinate of the rendered thumbnail inside the destination window
@@ -273,7 +273,7 @@ class Thumbnail
 
 	returns:
 		bool success - true on success, false on failure
-		
+
 	See also:
 		- <SetDestinationRegion>
 		- <SetSourceRegion>
@@ -287,7 +287,7 @@ class Thumbnail
 	/**********************************************************************************************************
 	method: SetSourceRegion
 		sets the region to be displayed
-		
+
 	Parameters:
 		int xSource - the x-coordinate of the area that will be shown inside the thumbnail
 		int ySource - the y-coordinate of the area that will be shown inside the thumbnail
@@ -296,7 +296,7 @@ class Thumbnail
 
 	returns:
 		bool success - true on success, false on failure
-		
+
 	See also:
 		- <SetRegion>
 		- <SetDestinationRegion>
@@ -319,14 +319,14 @@ class Thumbnail
 
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
-	
+
 	/**********************************************************************************************************
 	method: Show
 		shows a previously created and sized thumbnail
-				
+
 	returns:
 		bool success - true on success, false on failure
-		
+
 	See also:
 		- <Hide>
 	***********************************************************************************************************
@@ -336,13 +336,13 @@ class Thumbnail
 		static dwFlags := 0x00000008, fVisible := true
 
 		VarSetCapacity(dskThumbProps, 45, 0)
-		
+
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(fVisible,	dskThumbProps,	37,	"UInt")
 
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
-	
+
 	/**********************************************************************************************************
 	method: Unload
 		unloads the dwmapi-library and sets the module-field to 0
