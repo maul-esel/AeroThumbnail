@@ -90,7 +90,7 @@ class Thumbnail
 	{
 		id := this.id
 		this.id := 0
-		return DllCall("dwmapi.dll\DwmUnregisterThumbnail", "UPtr", id) == 0x00
+		return DllCall("dwmapi.dll\DwmUnregisterThumbnail", "UPtr", id) >= 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -178,7 +178,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(fVisible,	dskThumbProps,	37,	"UInt")
 
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 
 	/**********************************************************************************************************
@@ -211,7 +211,7 @@ class Thumbnail
 		NumPut(wDest+xDest,		dskThumbProps,	12,	"Int")
 		NumPut(hDest+yDest,		dskThumbProps,	16,	"Int")
 		
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -234,7 +234,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(!include,		dskThumbProps,	42, "UInt")
 		
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -254,7 +254,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(opacity,		dskThumbProps,	36,	"UChar")
 		
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", "UPtr", this.id, "Ptr", &dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", "UPtr", this.id, "Ptr", &dskThumbProps) >= 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -317,7 +317,7 @@ class Thumbnail
 		NumPut(wSource-xSource,		dskThumbProps,	28,	"Int")
 		NumPut(hSource-ySource,		dskThumbProps,	32,	"Int")
 
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -340,7 +340,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(fVisible,	dskThumbProps,	37,	"UInt")
 
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 	
 	/**********************************************************************************************************
