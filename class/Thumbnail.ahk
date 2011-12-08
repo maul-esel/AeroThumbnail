@@ -63,7 +63,7 @@ class Thumbnail
 	__New(hDestination, hSource)
 	{
 		VarSetCapacity(thumbnail,	4,	0)
-		if (DllCall("dwmapi.dll\DwmRegisterThumbnail", "UInt", hDestination, "UInt", hSource, "Ptr", &thumbnail) != 0x00)
+		if (DllCall("dwmapi.dll\DwmRegisterThumbnail", "UPtr", hDestination, "UPtr", hSource, "Ptr", &thumbnail) != 0x00)
 			return false
 		this.id := NumGet(thumbnail)
 	}
@@ -90,7 +90,7 @@ class Thumbnail
 	{
 		id := this.id
 		this.id := 0
-		return DllCall("dwmapi.dll\DwmUnregisterThumbnail", "UInt", id) == 0x00
+		return DllCall("dwmapi.dll\DwmUnregisterThumbnail", "UPtr", id) == 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -113,7 +113,7 @@ class Thumbnail
 	GetSourceSize(ByRef width, ByRef height)
 	{
 		VarSetCapacity(Size, 8, 0)
-		if (DllCall("dwmapi.dll\DwmQueryThumbnailSourceSize", "Uint", this.id, "Ptr", &Size) != 0x00)
+		if (DllCall("dwmapi.dll\DwmQueryThumbnailSourceSize", "UPtr", this.id, "Ptr", &Size) != 0x00)
 			return false
 		width := NumGet(&Size + 0, 0, "int")
 		height := NumGet(&Size + 0, 4, "int")
@@ -178,7 +178,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(fVisible,	dskThumbProps,	37,	"UInt")
 
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UInt",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
 	}
 
 	/**********************************************************************************************************
@@ -211,7 +211,7 @@ class Thumbnail
 		NumPut(wDest+xDest,		dskThumbProps,	12,	"Int")
 		NumPut(hDest+yDest,		dskThumbProps,	16,	"Int")
 		
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UInt",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -234,7 +234,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(!include,		dskThumbProps,	42, "UInt")
 		
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UInt",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -254,7 +254,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(opacity,		dskThumbProps,	36,	"UChar")
 		
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", "Uint", this.id, "Ptr", &dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", "UPtr", this.id, "Ptr", &dskThumbProps) == 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -317,7 +317,7 @@ class Thumbnail
 		NumPut(wSource-xSource,		dskThumbProps,	28,	"Int")
 		NumPut(hSource-ySource,		dskThumbProps,	32,	"Int")
 
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UInt",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -340,7 +340,7 @@ class Thumbnail
 		NumPut(dwFlags,		dskThumbProps,	0,	"UInt")
 		NumPut(fVisible,	dskThumbProps,	37,	"UInt")
 
-		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UInt",	this.id,	"Ptr",	&dskThumbProps) == 0x00
+		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) == 0x00
 	}
 	
 	/**********************************************************************************************************
@@ -353,6 +353,6 @@ class Thumbnail
 		global Thumbnail
 		module := Thumbnail.module
 		Thumbnail.module := 0
-		DllCall("FreeLibrary", "UInt", module)
+		DllCall("FreeLibrary", "UPtr", module)
 	}
 }
