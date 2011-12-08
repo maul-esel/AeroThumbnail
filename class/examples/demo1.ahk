@@ -1,6 +1,7 @@
-#include C:\Programming\AutoHotkey\Thumbnail\cThumbnail.ahk2
-#SingleInstance
+#include ..\Thumbnail.ahk
+#SingleInstance force
 #KeyHistory 0
+
 OnExit, GuiClose
 
 WinGet, hSource, ID, A
@@ -17,7 +18,7 @@ hSource := thumb.GetSourceHeight()
 xDest := 25
 yDest := 25
 wDest := 750
-hDest := hSource / wSource * wDest
+hDest := round(hSource / wSource * wDest)
 opacity := 255
 includeNC := true
 
@@ -54,12 +55,12 @@ opacity -= 25
 Update()
 return
 
-!#7::
+!#6::
 includeNC := !includeNC
 Update()
 return
 
-!#8::Reload
+!#7::Reload
 
 GuiClose:
 thumb.Destroy()
