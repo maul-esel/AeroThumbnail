@@ -346,13 +346,15 @@ class Thumbnail
 	/**********************************************************************************************************
 	method: Unload
 		unloads the dwmapi-library and sets the module-field to 0
+
+	returns:
+		bool success - true on success, false on failure
 	***********************************************************************************************************
 	*/
 	Unload()
 	{
-		global Thumbnail
 		module := Thumbnail.module
 		Thumbnail.module := 0
-		DllCall("FreeLibrary", "UPtr", module)
+		return DllCall("FreeLibrary", "UPtr", module)
 	}
 }
