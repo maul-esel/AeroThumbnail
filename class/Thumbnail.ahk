@@ -1,5 +1,5 @@
-/**************************************************************************************************************
-title: Thumbnail class
+/*
+class: Thumbnail
 wrapped by maul.esel
 
 Credits:
@@ -7,8 +7,9 @@ Credits:
 	- RaptorOne & IsNull for correcting some mistakes in the code
 	- Lexikos for AutoHotkey_L / AutoHotkey 2 with class syntax
 
-NOTE:
-*This requires Windows Vista or Windows7 and the latest AutoHotkey build* (tested on Windows 7)
+Requirements:
+	OS - Windows Vista or Windows 7 (tested on Windows 7)
+	AutoHotkey - AHK_L v1.1+ / AHK v2 alpha
 
 Quick-Tutorial:
 To add a thumbnail to a gui, you must know the following:
@@ -22,43 +23,39 @@ What to do:
 - Set its regions with <SetRegion> or <SetDestinationRegion> and <SetSourceRegion>, optionally query for the source windows width and height before with <GetSourceSize> or <GetSourceWidth> and <GetSourceHeight>
 - optionally set the opacity with <SetOpacity>
 - show the thumbnail with <Show>
-***************************************************************************************************************	
 */
 class Thumbnail
 {
-	/**********************************************************************************************************
+	/*
 	field: module
 		static field that contains the hModule handle to the loaded dwmapi.dll.
 		This field is for internal use only.
 
 	See also:
 		- <Unload>
-	***********************************************************************************************************
 	*/
 	static module := DllCall("LoadLibrary", "Str", "dwmapi.dll")
 
-	/**********************************************************************************************************
+	/*
 	field: handle
 		contains the hThumb handle to the thumbnail.
 		This field is for internal use only.
 
 	See also:
 		- <Destroy>
-	***********************************************************************************************************
 	*/
 	handle := 0
 
-	/**********************************************************************************************************
-	method: __New
+	/*
+	Method: __New
 		constructor for the class
 
 	Parameters:
-		hWnd hDestination - the handle to the window to display the thumbnail
-		hWnd hSource - 	the handle to the window to be displayed by the thumbnail
+		HWND hDestination - the handle to the window to display the thumbnail
+		HWND hSource - 	the handle to the window to be displayed by the thumbnail
 	
 	Returns:
 		Thumbnail instance - the new Thumbnail instance
-	***********************************************************************************************************
 	*/
 	__New(hDestination, hSource)
 	{
@@ -68,23 +65,21 @@ class Thumbnail
 		this.id := NumGet(thumbnail)
 	}
 
-	/**********************************************************************************************************
-	method: __Delete
+	/*
+	Method: __Delete
 		deconstructor for the class.
-	***********************************************************************************************************
 	*/
 	__Delete()
 	{
 		this.Destroy()
 	}
 
-	/**********************************************************************************************************
-	method: Destroy
+	/*
+	Method: Destroy
 		destroys a thumbnail relationship and sets the handle to 0
 
-	returns:
-		bool success - true on success, false on failure
-	***********************************************************************************************************
+	Returns:
+		BOOL success - true on success, false on failure
 	*/
 	Destroy()
 	{
@@ -93,22 +88,21 @@ class Thumbnail
 		return DllCall("dwmapi.dll\DwmUnregisterThumbnail", "UPtr", id) >= 0x00
 	}
 
-	/**********************************************************************************************************
-	method: GetSourceSize
+	/*
+	Method: GetSourceSize
 		gets the width and height of the source window
 
 	Parameters:
-		ByRef int width - receives the width of the window
-		ByRef int height - receives the height of the window
+		ByRef INT width - receives the width of the window
+		ByRef INT height - receives the height of the window
 
-	returns:
-		bool success - true on success, false on failure
+	Returns:
+		BOOL success - true on success, false on failure
 
 	See also:
 		- <GetSourceWidth>
 		- <GetSourceHeight>
 		- <SetSourceRegion>
-	***********************************************************************************************************
 	*/
 	GetSourceSize(ByRef width, ByRef height)
 	{
@@ -120,18 +114,17 @@ class Thumbnail
 		return true
 	}
 
-	/**********************************************************************************************************
-	method: GetSourceHeight
+	/*
+	Method: GetSourceHeight
 		gets the height of the source window
 
-	returns:
-		int height - the source window's height
+	Returns:
+		INT height - the source window's height
 
 	See also:
 		- <GetSourceSize>
 		- <GetSourceWidth>
 		- <SetSourceRegion>
-	***********************************************************************************************************
 	*/
 	GetSourceHeight()
 	{
@@ -139,18 +132,17 @@ class Thumbnail
 		return height
 	}
 
-	/**********************************************************************************************************
-	method: GetSourceWidth
+	/*
+	Method: GetSourceWidth
 		gets the width of the source window
 
-	returns:
-		int width - the source window's width
+	Returns:
+		INT width - the source window's width
 
 	See also:
 		- <GetSourceSize>
 		- <GetSourceHeight>
 		- <SetSourceRegion>
-	***********************************************************************************************************
 	*/
 	GetSourceWidth()
 	{
@@ -158,16 +150,15 @@ class Thumbnail
 		return width
 	}
 
-	/**********************************************************************************************************
-	method: Hide
+	/*
+	Method: Hide
 		hides a thumbnail. It can be shown again without recreating
 
-	returns:
-		bool success - true on success, false on failure
+	Returns:
+		BOOL success - true on success, false on failure
 
 	See also:
 		- <Show>
-	***********************************************************************************************************
 	*/
 	Hide()
 	{
@@ -181,23 +172,22 @@ class Thumbnail
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 
-	/**********************************************************************************************************
-	method: SetDestinationRegion
+	/*
+	Method: SetDestinationRegion
 		sets the region to be used for displaying
 
 	Parameters:
-		int xDest - the x-coordinate of the rendered thumbnail inside the destination window
-		int yDest - the y-coordinate of the rendered thumbnail inside the destination window
-		int wDest - the width of the rendered thumbnail inside the destination window
-		int hDest - the height of the rendered thumbnail inside the destination window
+		INT xDest - the x-coordinate of the rendered thumbnail inside the destination window
+		INT yDest - the y-coordinate of the rendered thumbnail inside the destination window
+		INT wDest - the width of the rendered thumbnail inside the destination window
+		INT hDest - the height of the rendered thumbnail inside the destination window
 
-	returns:
-		bool success - true on success, false on failure
+	Returns:
+		BOOL success - true on success, false on failure
 
 	See also:
 		- <SetRegion>
 		- <SetSourceRegion>
-	***********************************************************************************************************
 	*/
 	SetDestinationRegion(xDest, yDest, wDest, hDest)
 	{
@@ -214,16 +204,15 @@ class Thumbnail
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 
-	/**********************************************************************************************************
-	method: SetIncludeSourceNC
+	/*
+	Method: SetIncludeSourceNC
 		sets whether the source's non-client area should be included. The default value is true.
 
 	Parameters:
-		bool include - true to include the non-client area, false to exclude it
+		BOOL include - true to include the non-client area, false to exclude it
 
-	returns:
-		bool success - true on success, false on failure
-	***********************************************************************************************************
+	Returns:
+		BOOL success - true on success, false on failure
 	*/
 	SetIncludeSourceNC(include)
 	{
@@ -237,13 +226,12 @@ class Thumbnail
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 
-	/**********************************************************************************************************
-	method: SetOpacity
+	/*
+	Method: SetOpacity
 		sets the opacity level of the thumbnail
 
-	returns:
-		bool success - true on success, false on failure
-	***********************************************************************************************************
+	Returns:
+		BOOL success - true on success, false on failure
 	*/
 	SetOpacity(opacity)
 	{
@@ -257,45 +245,44 @@ class Thumbnail
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", "UPtr", this.id, "Ptr", &dskThumbProps) >= 0x00
 	}
 
-	/**********************************************************************************************************
-	method: SetRegion
+	/*
+	Method: SetRegion
 		sets the regions for both the area to be displayed and the area to be used for displaying
 
 	Parameters:
-		int xDest - the x-coordinate of the rendered thumbnail inside the destination window
-		int yDest - the y-coordinate of the rendered thumbnail inside the destination window
-		int wDest - the width of the rendered thumbnail inside the destination window
-		int hDest - the height of the rendered thumbnail inside the destination window
-		int xSource - the x-coordinate of the area that will be shown inside the thumbnail
-		int ySource - the y-coordinate of the area that will be shown inside the thumbnail
-		int wSource - the width of the area that will be shown inside the thumbnail
-		int hSource - the height of the area that will be shown inside the thumbnail
+		INT xDest - the x-coordinate of the rendered thumbnail inside the destination window
+		INT yDest - the y-coordinate of the rendered thumbnail inside the destination window
+		INT wDest - the width of the rendered thumbnail inside the destination window
+		INT hDest - the height of the rendered thumbnail inside the destination window
+		INT xSource - the x-coordinate of the area that will be shown inside the thumbnail
+		INT ySource - the y-coordinate of the area that will be shown inside the thumbnail
+		INT wSource - the width of the area that will be shown inside the thumbnail
+		INT hSource - the height of the area that will be shown inside the thumbnail
 
-	returns:
-		bool success - true on success, false on failure
+	Returns:
+		BOOL success - true on success, false on failure
 
 	See also:
 		- <SetDestinationRegion>
 		- <SetSourceRegion>
-	***********************************************************************************************************
 	*/
 	SetRegion(xDest, yDest, wDest, hDest, xSource, ySource, wSource, hSource)
 	{
 		return this.SetDestinationRegion(xDest, yDest, wDest, hDest) && this.SetSourceRegion(xSource, ySource, wSource, hSource)
 	}
 	
-	/**********************************************************************************************************
-	method: SetSourceRegion
+	/*
+	Method: SetSourceRegion
 		sets the region to be displayed
 
 	Parameters:
-		int xSource - the x-coordinate of the area that will be shown inside the thumbnail
-		int ySource - the y-coordinate of the area that will be shown inside the thumbnail
-		int wSource - the width of the area that will be shown inside the thumbnail
-		int hSource - the height of the area that will be shown inside the thumbnail
+		INT xSource - the x-coordinate of the area that will be shown inside the thumbnail
+		INT ySource - the y-coordinate of the area that will be shown inside the thumbnail
+		INT wSource - the width of the area that will be shown inside the thumbnail
+		INT hSource - the height of the area that will be shown inside the thumbnail
 
-	returns:
-		bool success - true on success, false on failure
+	Returns:
+		BOOL success - true on success, false on failure
 
 	See also:
 		- <SetRegion>
@@ -303,7 +290,6 @@ class Thumbnail
 		- <GetSourceSize>
 		- <GetSourceWidth>
 		- <GetSourceHeight>
-	***********************************************************************************************************
 	*/
 	SetSourceRegion(xSource, ySource, wSource, hSource)
 	{
@@ -320,16 +306,15 @@ class Thumbnail
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 
-	/**********************************************************************************************************
-	method: Show
+	/*
+	Method: Show
 		shows a previously created and sized thumbnail
 
-	returns:
-		bool success - true on success, false on failure
+	Returns:
+		BOOL success - true on success, false on failure
 
 	See also:
 		- <Hide>
-	***********************************************************************************************************
 	*/
 	Show()
 	{
@@ -343,13 +328,12 @@ class Thumbnail
 		return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties",	"UPtr",	this.id,	"Ptr",	&dskThumbProps) >= 0x00
 	}
 
-	/**********************************************************************************************************
-	method: Unload
+	/*
+	Method: Unload
 		unloads the dwmapi-library and sets the module-field to 0
 
-	returns:
-		bool success - true on success, false on failure
-	***********************************************************************************************************
+	Returns:
+		BOOL success - true on success, false on failure
 	*/
 	Unload()
 	{
