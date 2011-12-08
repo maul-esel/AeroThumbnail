@@ -1,5 +1,5 @@
 /*
-library: Thumbnail functions
+title: Thumbnail library
 wrapped by maul.esel
 
 Credits:
