@@ -42,7 +42,7 @@ Remarks:
 */
 Thumbnail_Create(hDestination, hSource)
 {
-	static _ptr := A_PtrSize ? "UPtr" : "UInt"
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(thumbnail,	4,	0)
 	if DllCall("dwmapi.dll\DwmRegisterThumbnail", _ptr, hDestination, _ptr, hSource, _ptr, &thumbnail)
@@ -70,7 +70,8 @@ Returns:
 */
 Thumbnail_SetRegion(hThumb, xDest, yDest, wDest, hDest, xSource, ySource, wSource, hSource)
 {
-	static dwFlags := 0x00000001 | 0x00000002, _ptr := A_PtrSize ? "UPtr" : "UInt"
+	dwFlags := 0x00000001 | 0x00000002
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(dskThumbProps, 45, 0)
 
@@ -101,7 +102,8 @@ Returns:
 */
 Thumbnail_Show(hThumb)
 {
-	static dwFlags := 0x00000008, fVisible := 1, _ptr := A_PtrSize ? "UPtr" : "UInt"
+	static dwFlags := 0x00000008, fVisible := 1
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(dskThumbProps, 45, 0)
 	NumPut(dwFlags,		dskThumbProps,	00,	"UInt")
@@ -123,7 +125,8 @@ Returns:
 */
 Thumbnail_Hide(hThumb)
 {
-	static dwFlags := 0x00000008, fVisible := 0, _ptr := A_PtrSize ? "UPtr" : "UInt"
+	static dwFlags := 0x00000008, fVisible := 0
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(dskThumbProps, 45, 0)
 
@@ -146,7 +149,7 @@ Returns:
 */
 Thumbnail_Destroy(hThumb)
 {
-	static _ptr := A_PtrSize ? "UPtr" : "UInt"
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	return DllCall("dwmapi.dll\DwmUnregisterThumbnail", _ptr, hThumb) >= 0x00
 }
@@ -166,7 +169,7 @@ Returns:
 */
 Thumbnail_GetSourceSize(hThumb, ByRef width, ByRef height)
 {
-	static _ptr := A_PtrSize ? "UPtr" : "UInt"
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(Size, 8, 0)
 	if DllCall("dwmapi.dll\DwmQueryThumbnailSourceSize", _ptr, hThumb, _ptr, &Size)
@@ -190,12 +193,37 @@ Returns:
 */
 Thumbnail_SetOpacity(hThumb, opacity)
 {
-	static dwFlags := 0x00000004, _ptr := A_PtrSize ? "UPtr" : "UInt"
+	static dwFlags := 0x00000004
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
 
 	VarSetCapacity(dskThumbProps, 45, 0)
 
 	NumPut(dwFlags,		dskThumbProps,	00,	"UInt")
 	NumPut(opacity,		dskThumbProps,	36,	"UChar")
+
+	return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", _ptr, hThumb, _ptr, &dskThumbProps) >= 0x00
+}
+
+/*
+Function: Thumbnail_SetIncludeNC()
+sets whether the source's non-client area should be included. The default value is true.
+
+Parameters:
+	HANDLE hThumb - the thumbnail id returned by <Thumbnail_Create()>
+	BOOL include - true to include the non-client area, false to exclude it
+
+Returns:
+	BOOL success - true on success, false on failure
+*/
+Thumbnail_SetIncludeNC(hThumb, include)
+{
+	static dwFlags := 0x00000010
+	_ptr := A_PtrSize ? "UPtr" : "UInt"
+
+	VarSetCapacity(dskThumbProps, 45, 0)
+
+	NumPut(dwFlags,		dskThumbProps,	00,	"UInt")
+	NumPut(!include,	dskThumbProps,	42, "UInt")
 
 	return DllCall("dwmapi.dll\DwmUpdateThumbnailProperties", _ptr, hThumb, _ptr, &dskThumbProps) >= 0x00
 }
